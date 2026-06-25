@@ -1,4 +1,4 @@
-(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=`/thdrc-rebuild/assets/logo-CVNcmIiR.png`,t=localStorage.getItem(`lang`)||`en`,n={en:{home:`Home`,research:`Research`,about:`About Us`,language:`English`,heroTitle:`More Than 0 Research Samples Over Here`,heroText:`Comprehensive analysis of human diversity patterns in Taiwan. Explore behavioral studies, social phenomena, and research insights.`},zh:{home:`首頁`,research:`研究`,about:`關於我們`,language:`中文`,heroTitle:`探索台灣人類多樣性研究資料`,heroText:`透過行為研究、社會現象分析，了解台灣人類多樣性的研究成果。`}};function r(e){return n[t]?.[e]||e}function i(){t=t===`en`?`zh`:`en`,localStorage.setItem(`lang`,t),window.dispatchEvent(new Event(`languageChange`))}function a(){return t}var o=`theme`;function s(){return setTimeout(c,0),`
+(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=`/thdrc-rebuild/assets/logo-CVNcmIiR.png`,t=localStorage.getItem(`lang`)||`en`,n={en:{home:`Home`,research:`Research`,about:`About Us`,language:`English`,heroTitle:`Taiwan Human Diversity Research Center`,heroText:`Comprehensive analysis of human diversity patterns in Taiwan. Explore behavioral studies, social phenomena, and research insights.`},zh:{home:`首頁`,research:`研究`,about:`關於我們`,language:`中文`,heroTitle:`台灣人類多樣性研究中心`,heroText:`透過行為研究與社會現象分析，探索台灣人類多樣性的研究成果。`}};function r(e){return n[t]?.[e]||e}function i(){t=t===`en`?`zh`:`en`,localStorage.setItem(`lang`,t),window.dispatchEvent(new Event(`languageChange`))}function a(){return t}var o=`theme`;function s(){return setTimeout(c,0),`
     <header class="
       flex justify-between items-center
       px-8 py-5
@@ -64,7 +64,7 @@
     <span class="font-medium">
       ${t?`Dark`:`Light`}
     </span>
-  `}var f=`/thdrc-rebuild/assets/hero-B92wop4K.jpg`,p=[];async function m(){try{let e=await(await fetch(`https://docs.google.com/spreadsheets/d/10o7VVWl4Axa67edzlpsxjMIEeTGFnxzi2kDOJS6eHZQ/gviz/tq?tqx=out:json`)).text(),t=e.indexOf(`{`),n=e.lastIndexOf(`}`),r=JSON.parse(e.substring(t,n+1))?.table?.rows||[];console.log(`TOTAL RAW ROWS:`,r.length),p=r.map((e,t)=>{let n=e.c||[];return{HDS_Code:n[0]?.v??`ROW_${t}`,Threads_Link:n[2]?.v??``,Outstanding_Paper:n[3]?.v??``,Status:n[4]?.v??``,Category:n[5]?.v??``,CategoryEN:n[6]?.v??``,Score:n[7]?.v??``,Title:n[10]?.v??n[1]?.v??`Untitled_${t}`,Image:n[11]?.v??``}}),console.log(`PARSED PAPERS:`,p.length)}catch(e){console.error(`initPapers failed:`,e),p=[{Title:`Fallback Paper A`,Score:`A`,Status:`offline`,Category:`test`}]}}function h(){return p}function g(){let e=h()||[],t=e.length;return`
+  `}var f=`/thdrc-rebuild/assets/hero-B92wop4K.jpg`;function p(e=0){return`
     <section class="
       relative w-full flex items-center justify-center
       text-white py-24
@@ -81,28 +81,28 @@
       <!-- CONTENT -->
       <div class="relative z-10 text-center max-w-3xl px-6">
 
-        <!-- TITLE -->
         <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
           ${r(`heroTitle`)}
         </h1>
 
-        <!-- DESCRIPTION (修成 i18n 可控) -->
         <p class="text-lg md:text-xl opacity-80 mb-4">
           ${r(`heroText`)}
         </p>
 
-        <!-- COUNT (中英切換) -->
+        <!-- COUNT -->
         <div class="mb-8 text-sm md:text-base opacity-70">
+
           ${a()===`zh`?`目前共有`:`More Than`}
 
           <span class="text-white text-2xl font-bold mx-1">
-            ${t}
+            ${e}
           </span>
 
           ${a()===`zh`?`筆研究樣本`:`Research Samples Over Here`}
+
         </div>
 
-        <!-- SEARCH BAR -->
+        <!-- SEARCH -->
         <div class="
           flex gap-2 p-3
           bg-black/40 backdrop-blur-md
@@ -111,7 +111,6 @@
           max-w-xl mx-auto
         ">
 
-          <!-- CATEGORY (動態修復) -->
           <select class="
             p-2 rounded-lg
             bg-white/10 text-white
@@ -121,8 +120,6 @@
             <option value="ALL">
               ${a()===`zh`?`全部分類`:`All Categories`}
             </option>
-
-            ${[...new Set(e.map(e=>e.Category).filter(Boolean))].map(e=>`<option value="${e}">${e}</option>`).join(``)}
           </select>
 
           <input
@@ -143,7 +140,6 @@
 
         </div>
 
-        <!-- FOOTER -->
         <div class="mt-6 text-xs opacity-50 tracking-widest">
           CLASSIFIED RESEARCH ARCHIVE SYSTEM
         </div>
@@ -151,7 +147,7 @@
       </div>
 
     </section>
-  `}function _(t){let n=t.HDS_Code||`***`;return`
+  `}var m=[];async function h(){try{let e=await(await fetch(`https://docs.google.com/spreadsheets/d/10o7VVWl4Axa67edzlpsxjMIEeTGFnxzi2kDOJS6eHZQ/gviz/tq?tqx=out:json`)).text(),t=e.indexOf(`{`),n=e.lastIndexOf(`}`),r=JSON.parse(e.substring(t,n+1))?.table?.rows||[];console.log(`TOTAL RAW ROWS:`,r.length),m=r.map((e,t)=>{let n=e.c||[];return{HDS_Code:n[0]?.v??`ROW_${t}`,Threads_Link:n[2]?.v??``,Outstanding_Paper:n[3]?.v??``,Status:n[4]?.v??``,Category:n[5]?.v??``,CategoryEN:n[6]?.v??``,Score:n[7]?.v??``,Title:n[10]?.v??n[1]?.v??`Untitled_${t}`,Image:n[11]?.v??``}}),console.log(`PARSED PAPERS:`,m.length)}catch(e){console.error(`initPapers failed:`,e),m=[{Title:`Fallback Paper A`,Score:`A`,Status:`offline`,Category:`test`}]}}function g(){return m}function _(t){let n=t.HDS_Code||`***`;return`
     <div class="
       w-full max-w-sm mx-auto
       rounded-xl border overflow-hidden
@@ -325,12 +321,12 @@
       <div id="pagination" class="flex gap-2 mt-8 justify-center"></div>
 
     </section>
-  `}async function D(){await m(),F(),queueMicrotask(()=>{O(),A(),N()})}function O(){C||(C=!0,k(),j(),M(),window.addEventListener(`themeChange`,F),window.addEventListener(`languageChange`,F))}function k(){let e=document.getElementById(`search`);e&&(e.oninput=e=>{clearTimeout(w),w=setTimeout(()=>{x.search=e.target.value.toLowerCase(),x.page=1,F()},150)})}function A(){let e=h();t(`category`,`Category`),t(`status`,`Status`),t(`score`,`Score`);function t(t,n){let r=document.getElementById(t);r&&(r.querySelectorAll(`option:not([value='ALL'])`).forEach(e=>e.remove()),[...new Set(e.map(e=>e[n]).filter(e=>e!=null&&e!==``).map(e=>String(e).trim()))].forEach(e=>{let t=document.createElement(`option`);t.value=e,t.textContent=e,r.appendChild(t)}))}}function j(){let e=(e,t)=>{let n=document.getElementById(e);n&&(n.onchange=e=>{x[t]=e.target.value,x.page=1,F()})};e(`category`,`category`),e(`status`,`status`),e(`score`,`score`)}function M(){let e=document.getElementById(`sortBtn`);e&&(e.onclick=()=>{x.sort=x.sort===`newest`?`oldest`:`newest`,F()})}function N(){let e=document.getElementById(`sortBtn`);e&&(e.innerHTML=`
+  `}async function D(){await h(),F(),queueMicrotask(()=>{O(),A(),N()})}function O(){C||(C=!0,k(),j(),M(),window.addEventListener(`themeChange`,F),window.addEventListener(`languageChange`,F))}function k(){let e=document.getElementById(`search`);e&&(e.oninput=e=>{clearTimeout(w),w=setTimeout(()=>{x.search=e.target.value.toLowerCase(),x.page=1,F()},150)})}function A(){let e=g();t(`category`,`Category`),t(`status`,`Status`),t(`score`,`Score`);function t(t,n){let r=document.getElementById(t);r&&(r.querySelectorAll(`option:not([value='ALL'])`).forEach(e=>e.remove()),[...new Set(e.map(e=>e[n]).filter(e=>e!=null&&e!==``).map(e=>String(e).trim()))].forEach(e=>{let t=document.createElement(`option`);t.value=e,t.textContent=e,r.appendChild(t)}))}}function j(){let e=(e,t)=>{let n=document.getElementById(e);n&&(n.onchange=e=>{x[t]=e.target.value,x.page=1,F()})};e(`category`,`category`),e(`status`,`status`),e(`score`,`score`)}function M(){let e=document.getElementById(`sortBtn`);e&&(e.onclick=()=>{x.sort=x.sort===`newest`?`oldest`:`newest`,F()})}function N(){let e=document.getElementById(`sortBtn`);e&&(e.innerHTML=`
     Sort:
     <span class="font-semibold">
       ${x.sort===`newest`?`⬇ Newest`:`⬆ Oldest`}
     </span>
-  `)}function P(){let e=h();return x.category!==`ALL`&&(e=e.filter(e=>e.Category===x.category)),x.status!==`ALL`&&(e=e.filter(e=>e.Status===x.status)),x.score!==`ALL`&&(e=e.filter(e=>(e.Score||``).startsWith(x.score))),x.search&&(e=e.filter(e=>(e.Title||``).toLowerCase().includes(x.search))),e.sort((e,t)=>{let n=Number(e.HDS_Code),r=Number(t.HDS_Code);return x.sort===`newest`?r-n:n-r})}function F(){let e=document.getElementById(`list`),t=document.getElementById(`papers-status`);if(!e)return;let n=P(),r=Math.max(1,Math.ceil(n.length/x.pageSize));x.page>r&&(x.page=1);let i=(x.page-1)*x.pageSize;e.innerHTML=n.slice(i,i+x.pageSize).map(_).join(``),t&&(t.textContent=`Loaded ${n.length} papers | Page ${x.page}/${r}`),I(r)}function I(e){let t=document.getElementById(`pagination`);t&&(t.innerHTML=L(x.page,e).map(e=>e===`...`?`<span class="px-2 opacity-50">...</span>`:`
+  `)}function P(){let e=g();return x.category!==`ALL`&&(e=e.filter(e=>e.Category===x.category)),x.status!==`ALL`&&(e=e.filter(e=>e.Status===x.status)),x.score!==`ALL`&&(e=e.filter(e=>(e.Score||``).startsWith(x.score))),x.search&&(e=e.filter(e=>(e.Title||``).toLowerCase().includes(x.search))),e.sort((e,t)=>{let n=Number(e.HDS_Code),r=Number(t.HDS_Code);return x.sort===`newest`?r-n:n-r})}function F(){let e=document.getElementById(`list`),t=document.getElementById(`papers-status`);if(!e)return;let n=P(),r=Math.max(1,Math.ceil(n.length/x.pageSize));x.page>r&&(x.page=1);let i=(x.page-1)*x.pageSize;e.innerHTML=n.slice(i,i+x.pageSize).map(_).join(``),t&&(t.textContent=`Loaded ${n.length} papers | Page ${x.page}/${r}`),I(r)}function I(e){let t=document.getElementById(`pagination`);t&&(t.innerHTML=L(x.page,e).map(e=>e===`...`?`<span class="px-2 opacity-50">...</span>`:`
       <button class="
         px-3 py-1 border rounded-lg
         bg-[var(--card)]
@@ -403,4 +399,4 @@
       </div>
 
     </footer>
-  `}var z=`theme`;function B(){let e=localStorage.getItem(z),t=window.matchMedia(`(prefers-color-scheme: dark)`).matches,n=e?e===`dark`:t;document.documentElement.classList.toggle(`dark`,n),localStorage.setItem(z,n?`dark`:`light`)}function V(e,t){let n=document.querySelector(e);if(!n){console.warn(`[mount] target not found: ${e}`);return}n.innerHTML=t}function H(){console.log(`🚀 App rendering...`),V(`#navbar`,s()),V(`#hero`,g()),V(`#papers-root`,T()),V(`#footer`,R())}function U(){B(),H()}window.addEventListener(`languageChange`,H),window.addEventListener(`themeChange`,H),U();
+  `}var z=`theme`;function B(){let e=localStorage.getItem(z),t=window.matchMedia(`(prefers-color-scheme: dark)`).matches,n=e?e===`dark`:t;document.documentElement.classList.toggle(`dark`,n),localStorage.setItem(z,n?`dark`:`light`)}function V(e,t){let n=document.querySelector(e);if(!n){console.warn(`[mount] target not found: ${e}`);return}n.innerHTML=t}function H(){console.log(`🚀 App rendering...`),V(`#navbar`,s()),V(`#hero`,p()),V(`#papers-root`,T()),V(`#footer`,R())}function U(){B(),H()}window.addEventListener(`languageChange`,H),window.addEventListener(`themeChange`,H),U();
