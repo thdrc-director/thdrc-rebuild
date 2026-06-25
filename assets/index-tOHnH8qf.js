@@ -64,90 +64,375 @@
     <span class="font-medium">
       ${t?`Dark`:`Light`}
     </span>
-  `}var f=`/thdrc-rebuild/assets/hero-B92wop4K.jpg`;function p(e=0){return`
-    <section class="
-      relative w-full flex items-center justify-center
-      text-white py-24
-    ">
+  `}var f=`/thdrc-rebuild/assets/hero-B92wop4K.jpg`,p=[];async function m(){try{let e=await(await fetch(`https://docs.google.com/spreadsheets/d/10o7VVWl4Axa67edzlpsxjMIEeTGFnxzi2kDOJS6eHZQ/gviz/tq?tqx=out:json`)).text(),t=e.indexOf(`{`),n=e.lastIndexOf(`}`),r=JSON.parse(e.substring(t,n+1))?.table?.rows||[];console.log(`TOTAL RAW ROWS:`,r.length),p=r.map((e,t)=>{let n=e.c||[];return{HDS_Code:n[0]?.v??`ROW_${t}`,Threads_Link:n[2]?.v??``,Outstanding_Paper:n[3]?.v??``,Status:n[4]?.v??``,Category:n[5]?.v??``,CategoryEN:n[6]?.v??``,Score:n[7]?.v??``,Title:n[10]?.v??n[1]?.v??`Untitled_${t}`,Image:n[11]?.v??``}}),console.log(`PARSED PAPERS:`,p.length)}catch(e){console.error(`initPapers failed:`,e),p=[{Title:`Fallback Paper A`,Score:`A`,Status:`offline`,Category:`test`}]}}function h(){return p}function g(){let e=h()||[],t=e.length,n=a()===`zh`,i=[...new Set(e.map(e=>e.Category).filter(Boolean))];return setTimeout(()=>{_()},100),setTimeout(()=>{y(t)},900),`
+<section
+class="
+relative
+w-full
+flex
+items-center
+justify-center
 
-      <!-- BACKGROUND -->
-      <div
-        class="absolute inset-0 bg-cover bg-center"
-        style="background-image:url('${f}')"
-      ></div>
+text-white
 
-      <div class="absolute inset-0 bg-black/65"></div>
+py-24
 
-      <!-- CONTENT -->
-      <div class="relative z-10 text-center max-w-3xl px-6">
+overflow-hidden
+"
+>
 
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-          ${r(`heroTitle`)}
-        </h1>
 
-        <p class="text-lg md:text-xl opacity-80 mb-4">
-          ${r(`heroText`)}
-        </p>
+<div
+class="
+absolute
+inset-0
+bg-cover
+bg-center
+"
+style="background-image:url('${f}')"
+></div>
 
-        <!-- COUNT -->
-        <div class="mb-8 text-sm md:text-base opacity-70">
 
-          ${a()===`zh`?`目前共有`:`More Than`}
 
-          <span class="text-white text-2xl font-bold mx-1">
-            ${e}
-          </span>
+<div
+class="
+absolute
+inset-0
+bg-black/65
+"
+></div>
 
-          ${a()===`zh`?`筆研究樣本`:`Research Samples Over Here`}
 
-        </div>
 
-        <!-- SEARCH -->
-        <div class="
-          flex gap-2 p-3
-          bg-black/40 backdrop-blur-md
-          border border-white/10
-          rounded-2xl
-          max-w-xl mx-auto
-        ">
 
-          <select class="
-            p-2 rounded-lg
-            bg-white/10 text-white
-            border border-white/10
-            outline-none
-          ">
-            <option value="ALL">
-              ${a()===`zh`?`全部分類`:`All Categories`}
-            </option>
-          </select>
 
-          <input
-            class="
-              flex-1 p-2 bg-transparent
-              text-white placeholder-white/50
-              outline-none
-            "
-            placeholder="${a()===`zh`?`搜尋研究樣本...`:`Search research samples...`}"
-          />
 
-          <button class="
-            px-4 py-2 bg-white text-black
-            rounded-lg font-medium hover:opacity-80 transition
-          ">
-            ${a()===`zh`?`搜尋`:`Search`}
-          </button>
+<div
+id="hero-box"
+class="
+relative
+z-10
 
-        </div>
+flex
+flex-col
+items-center
 
-        <div class="mt-6 text-xs opacity-50 tracking-widest">
-          CLASSIFIED RESEARCH ARCHIVE SYSTEM
-        </div>
+text-center
 
-      </div>
+w-full
+max-w-3xl
 
-    </section>
-  `}var m=[];async function h(){try{let e=await(await fetch(`https://docs.google.com/spreadsheets/d/10o7VVWl4Axa67edzlpsxjMIEeTGFnxzi2kDOJS6eHZQ/gviz/tq?tqx=out:json`)).text(),t=e.indexOf(`{`),n=e.lastIndexOf(`}`),r=JSON.parse(e.substring(t,n+1))?.table?.rows||[];console.log(`TOTAL RAW ROWS:`,r.length),m=r.map((e,t)=>{let n=e.c||[];return{HDS_Code:n[0]?.v??`ROW_${t}`,Threads_Link:n[2]?.v??``,Outstanding_Paper:n[3]?.v??``,Status:n[4]?.v??``,Category:n[5]?.v??``,CategoryEN:n[6]?.v??``,Score:n[7]?.v??``,Title:n[10]?.v??n[1]?.v??`Untitled_${t}`,Image:n[11]?.v??``}}),console.log(`PARSED PAPERS:`,m.length)}catch(e){console.error(`initPapers failed:`,e),m=[{Title:`Fallback Paper A`,Score:`A`,Status:`offline`,Category:`test`}]}}function g(){return m}function _(t){let n=t.HDS_Code||`***`;return`
+px-6
+
+opacity-0
+translate-y-4
+
+transition-all
+duration-[1400ms]
+ease-out
+"
+>
+
+
+
+
+
+<h1
+class="
+font-bold
+
+mb-6
+
+tracking-tight
+
+text-3xl
+sm:text-4xl
+md:text-6xl
+
+whitespace-nowrap
+"
+>
+
+${r(`heroTitle`)}
+
+</h1>
+
+
+
+
+
+
+
+<p
+class="
+text-lg
+md:text-xl
+
+opacity-80
+
+mb-4
+"
+>
+
+${r(`heroText`)}
+
+</p>
+
+
+
+
+
+
+
+
+
+<div
+class="
+mb-8
+
+text-sm
+md:text-base
+
+opacity-70
+
+whitespace-nowrap
+"
+>
+
+
+${n?`目前共有`:`More Than`}
+
+
+
+<span
+id="hero-count"
+class="
+text-white
+
+text-2xl
+
+font-bold
+
+mx-1
+
+tabular-nums
+"
+>
+0
+</span>
+
+
+
+${n?`筆研究樣本`:`Research Samples Over Here`}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+class="
+flex
+
+flex-col
+
+sm:flex-row
+
+
+gap-2
+
+p-3
+
+
+bg-black/40
+
+backdrop-blur-md
+
+
+border
+
+border-white/10
+
+
+rounded-2xl
+
+
+w-full
+
+max-w-xl
+"
+>
+
+
+
+
+
+
+<select
+class="
+p-2
+
+rounded-lg
+
+bg-white/10
+
+text-white
+
+border
+
+border-white/10
+
+outline-none
+
+text-sm
+"
+>
+
+
+<option value="ALL">
+
+${n?`全部分類`:`All Categories`}
+
+</option>
+
+
+
+${i.map(e=>`
+<option value="${e}">
+${e}
+</option>
+`).join(``)}
+
+
+</select>
+
+
+
+
+
+
+
+
+
+<input
+
+class="
+flex-1
+
+p-2
+
+bg-transparent
+
+text-white
+
+placeholder-white/50
+
+outline-none
+
+text-sm
+"
+
+placeholder="${n?`搜尋研究樣本...`:`Search research samples...`}"
+
+/>
+
+
+
+
+
+
+
+
+<button
+
+class="
+px-4
+
+py-2
+
+bg-white
+
+text-black
+
+
+rounded-lg
+
+font-medium
+
+
+hover:opacity-80
+
+transition
+
+
+text-sm
+
+whitespace-nowrap
+"
+
+>
+
+${n?`搜尋`:`Search`}
+
+</button>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+
+class="
+mt-6
+
+text-xs
+
+opacity-50
+
+tracking-normal
+
+whitespace-nowrap
+
+text-center
+"
+
+>
+
+
+${n?`台灣人類多樣性研究中心`:`Taiwan Human Diversity Research Center`}
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+</section>
+`}function _(){let e=document.getElementById(`hero-box`);e&&requestAnimationFrame(()=>{e.classList.remove(`opacity-0`,`translate-y-4`),e.classList.add(`opacity-100`,`translate-y-0`)})}function v(e){return e===1?1:1-2**(-10*e)}function y(e){let t=document.getElementById(`hero-count`);if(!t)return;let n=performance.now();function r(i){let a=Math.min((i-n)/1800,1);t.textContent=Math.floor(e*v(a)).toLocaleString(),a<1?requestAnimationFrame(r):t.textContent=e.toLocaleString()}requestAnimationFrame(r)}function b(t){let n=t.HDS_Code||`***`;return`
     <div class="
       w-full max-w-sm mx-auto
       rounded-xl border overflow-hidden
@@ -168,7 +453,7 @@
 
         <div class="
           text-xs px-2 py-1 rounded-full font-medium
-          ${v(t.Status)}
+          ${x(t.Status)}
         ">
           ${t.Status||`-`}
         </div>
@@ -218,14 +503,14 @@
 
           <span class="
             px-2 py-1 rounded-full
-            ${b(t.Category)}
+            ${C(t.Category)}
           ">
             ${t.Category||`-`}
           </span>
 
           <span class="
             px-2 py-1 rounded-full font-semibold
-            ${y(t.Score)}
+            ${S(t.Score)}
           ">
             ${t.Score||`-`}
           </span>
@@ -256,7 +541,7 @@
 
       </div>
     </div>
-  `}function v(e){switch((e||``).toLowerCase()){case`available`:return`bg-green-100 text-green-700`;case`eliminate`:return`bg-red-100 text-red-700`;default:return`bg-gray-100 text-gray-700`}}function y(e){switch(e){case`A+`:return`bg-yellow-200 text-yellow-900 font-bold`;case`A`:return`bg-emerald-100 text-emerald-700`;case`B`:return`bg-blue-100 text-blue-700`;case`C`:return`bg-amber-100 text-amber-700`;default:return`bg-gray-100 text-gray-700`}}function b(e){let t=(e||``).toLowerCase();return t.includes(`bias`)?`bg-purple-100 text-purple-700`:t.includes(`disinformation`)?`bg-pink-100 text-pink-700`:t.includes(`eliminate`)?`bg-red-100 text-red-700`:`bg-gray-100 text-gray-700`}var x={search:``,category:`ALL`,score:`ALL`,status:`ALL`,sort:`newest`,page:1,pageSize:12},S=!1,C=!1,w=null;function T(){return S||(S=!0,queueMicrotask(D)),E()}function E(){return`
+  `}function x(e){switch((e||``).toLowerCase()){case`available`:return`bg-green-100 text-green-700`;case`eliminate`:return`bg-red-100 text-red-700`;default:return`bg-gray-100 text-gray-700`}}function S(e){switch(e){case`A+`:return`bg-yellow-200 text-yellow-900 font-bold`;case`A`:return`bg-emerald-100 text-emerald-700`;case`B`:return`bg-blue-100 text-blue-700`;case`C`:return`bg-amber-100 text-amber-700`;default:return`bg-gray-100 text-gray-700`}}function C(e){let t=(e||``).toLowerCase();return t.includes(`bias`)?`bg-purple-100 text-purple-700`:t.includes(`disinformation`)?`bg-pink-100 text-pink-700`:t.includes(`eliminate`)?`bg-red-100 text-red-700`:`bg-gray-100 text-gray-700`}var w={search:``,category:`ALL`,score:`ALL`,status:`ALL`,sort:`newest`,page:1,pageSize:12},T=!1,E=!1,D=null;function O(){return T||(T=!0,queueMicrotask(A)),k()}function k(){return`
     <section class="
       p-6 text-[var(--text)]
       bg-[var(--bg)]
@@ -321,21 +606,21 @@
       <div id="pagination" class="flex gap-2 mt-8 justify-center"></div>
 
     </section>
-  `}async function D(){await h(),F(),queueMicrotask(()=>{O(),A(),N()})}function O(){C||(C=!0,k(),j(),M(),window.addEventListener(`themeChange`,F),window.addEventListener(`languageChange`,F))}function k(){let e=document.getElementById(`search`);e&&(e.oninput=e=>{clearTimeout(w),w=setTimeout(()=>{x.search=e.target.value.toLowerCase(),x.page=1,F()},150)})}function A(){let e=g();t(`category`,`Category`),t(`status`,`Status`),t(`score`,`Score`);function t(t,n){let r=document.getElementById(t);r&&(r.querySelectorAll(`option:not([value='ALL'])`).forEach(e=>e.remove()),[...new Set(e.map(e=>e[n]).filter(e=>e!=null&&e!==``).map(e=>String(e).trim()))].forEach(e=>{let t=document.createElement(`option`);t.value=e,t.textContent=e,r.appendChild(t)}))}}function j(){let e=(e,t)=>{let n=document.getElementById(e);n&&(n.onchange=e=>{x[t]=e.target.value,x.page=1,F()})};e(`category`,`category`),e(`status`,`status`),e(`score`,`score`)}function M(){let e=document.getElementById(`sortBtn`);e&&(e.onclick=()=>{x.sort=x.sort===`newest`?`oldest`:`newest`,F()})}function N(){let e=document.getElementById(`sortBtn`);e&&(e.innerHTML=`
+  `}async function A(){await m(),R(),queueMicrotask(()=>{j(),N(),I()})}function j(){E||(E=!0,M(),P(),F(),window.addEventListener(`themeChange`,R),window.addEventListener(`languageChange`,R))}function M(){let e=document.getElementById(`search`);e&&(e.oninput=e=>{clearTimeout(D),D=setTimeout(()=>{w.search=e.target.value.toLowerCase(),w.page=1,R()},150)})}function N(){let e=h();t(`category`,`Category`),t(`status`,`Status`),t(`score`,`Score`);function t(t,n){let r=document.getElementById(t);r&&(r.querySelectorAll(`option:not([value='ALL'])`).forEach(e=>e.remove()),[...new Set(e.map(e=>e[n]).filter(e=>e!=null&&e!==``).map(e=>String(e).trim()))].forEach(e=>{let t=document.createElement(`option`);t.value=e,t.textContent=e,r.appendChild(t)}))}}function P(){let e=(e,t)=>{let n=document.getElementById(e);n&&(n.onchange=e=>{w[t]=e.target.value,w.page=1,R()})};e(`category`,`category`),e(`status`,`status`),e(`score`,`score`)}function F(){let e=document.getElementById(`sortBtn`);e&&(e.onclick=()=>{w.sort=w.sort===`newest`?`oldest`:`newest`,R()})}function I(){let e=document.getElementById(`sortBtn`);e&&(e.innerHTML=`
     Sort:
     <span class="font-semibold">
-      ${x.sort===`newest`?`⬇ Newest`:`⬆ Oldest`}
+      ${w.sort===`newest`?`⬇ Newest`:`⬆ Oldest`}
     </span>
-  `)}function P(){let e=g();return x.category!==`ALL`&&(e=e.filter(e=>e.Category===x.category)),x.status!==`ALL`&&(e=e.filter(e=>e.Status===x.status)),x.score!==`ALL`&&(e=e.filter(e=>(e.Score||``).startsWith(x.score))),x.search&&(e=e.filter(e=>(e.Title||``).toLowerCase().includes(x.search))),e.sort((e,t)=>{let n=Number(e.HDS_Code),r=Number(t.HDS_Code);return x.sort===`newest`?r-n:n-r})}function F(){let e=document.getElementById(`list`),t=document.getElementById(`papers-status`);if(!e)return;let n=P(),r=Math.max(1,Math.ceil(n.length/x.pageSize));x.page>r&&(x.page=1);let i=(x.page-1)*x.pageSize;e.innerHTML=n.slice(i,i+x.pageSize).map(_).join(``),t&&(t.textContent=`Loaded ${n.length} papers | Page ${x.page}/${r}`),I(r)}function I(e){let t=document.getElementById(`pagination`);t&&(t.innerHTML=L(x.page,e).map(e=>e===`...`?`<span class="px-2 opacity-50">...</span>`:`
+  `)}function L(){let e=h();return w.category!==`ALL`&&(e=e.filter(e=>e.Category===w.category)),w.status!==`ALL`&&(e=e.filter(e=>e.Status===w.status)),w.score!==`ALL`&&(e=e.filter(e=>(e.Score||``).startsWith(w.score))),w.search&&(e=e.filter(e=>(e.Title||``).toLowerCase().includes(w.search))),e.sort((e,t)=>{let n=Number(e.HDS_Code),r=Number(t.HDS_Code);return w.sort===`newest`?r-n:n-r})}function R(){let e=document.getElementById(`list`),t=document.getElementById(`papers-status`);if(!e)return;let n=L(),r=Math.max(1,Math.ceil(n.length/w.pageSize));w.page>r&&(w.page=1);let i=(w.page-1)*w.pageSize;e.innerHTML=n.slice(i,i+w.pageSize).map(b).join(``),t&&(t.textContent=`Loaded ${n.length} papers | Page ${w.page}/${r}`),z(r)}function z(e){let t=document.getElementById(`pagination`);t&&(t.innerHTML=B(w.page,e).map(e=>e===`...`?`<span class="px-2 opacity-50">...</span>`:`
       <button class="
         px-3 py-1 border rounded-lg
         bg-[var(--card)]
         border-[var(--border)]
-        ${e===x.page?`font-bold`:`opacity-70`}
+        ${e===w.page?`font-bold`:`opacity-70`}
       ">
         ${e}
       </button>
-    `).join(``),t.querySelectorAll(`button`).forEach(e=>{e.onclick=()=>{x.page=Number(e.textContent),F()}}))}function L(e,t){let n=[],r=Math.max(1,e-3),i=Math.min(t,e+3);r>1&&(n.push(1),r>2&&n.push(`...`));for(let e=r;e<=i;e++)n.push(e);return i<t&&(i<t-1&&n.push(`...`),n.push(t)),n}function R(){return`
+    `).join(``),t.querySelectorAll(`button`).forEach(e=>{e.onclick=()=>{w.page=Number(e.textContent),R()}}))}function B(e,t){let n=[],r=Math.max(1,e-3),i=Math.min(t,e+3);r>1&&(n.push(1),r>2&&n.push(`...`));for(let e=r;e<=i;e++)n.push(e);return i<t&&(i<t-1&&n.push(`...`),n.push(t)),n}function V(){return`
     <footer class="
       bg-[var(--bg)]
       text-[var(--text)]
@@ -399,4 +684,4 @@
       </div>
 
     </footer>
-  `}var z=`theme`;function B(){let e=localStorage.getItem(z),t=window.matchMedia(`(prefers-color-scheme: dark)`).matches,n=e?e===`dark`:t;document.documentElement.classList.toggle(`dark`,n),localStorage.setItem(z,n?`dark`:`light`)}function V(e,t){let n=document.querySelector(e);if(!n){console.warn(`[mount] target not found: ${e}`);return}n.innerHTML=t}function H(){console.log(`🚀 App rendering...`),V(`#navbar`,s()),V(`#hero`,p()),V(`#papers-root`,T()),V(`#footer`,R())}function U(){B(),H()}window.addEventListener(`languageChange`,H),window.addEventListener(`themeChange`,H),U();
+  `}var H=`theme`;function U(){let e=localStorage.getItem(H),t=window.matchMedia(`(prefers-color-scheme: dark)`).matches,n=e?e===`dark`:t;document.documentElement.classList.toggle(`dark`,n),localStorage.setItem(H,n?`dark`:`light`)}function W(e,t){let n=document.querySelector(e);if(!n){console.warn(`[mount] target not found: ${e}`);return}n.innerHTML=t}function G(){console.log(`🚀 App rendering...`),W(`#navbar`,s()),W(`#hero`,g()),W(`#papers-root`,O()),W(`#footer`,V())}async function K(){U(),await m(),G()}window.addEventListener(`languageChange`,G),window.addEventListener(`themeChange`,G),K();
