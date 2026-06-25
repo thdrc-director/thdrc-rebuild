@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THDRC</title>
+
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- your global styles -->
+    <script type="module" crossorigin src="/thdrc-rebuild/assets/index-EnYBduVU.js"></script>
+    <link rel="stylesheet" crossorigin href="/thdrc-rebuild/assets/index-CruN22QX.css">
+  </head>
+
+  <!-- ❗不要加 bg-white / text-black（避免破壞 dark mode） -->
+  <body class="min-h-screen">
+
+    <!-- SPA ROOT（改成 flex column layout） -->
+    <div id="app" class="min-h-screen flex flex-col">
+
+      <!-- NAV -->
+      <div id="navbar"></div>
+
+      <!-- HERO -->
+      <div id="hero"></div>
+
+      <!-- MAIN CONTENT（重點：吃掉剩餘空間） -->
+      <main id="papers-root" class="flex-1"></main>
+
+      <!-- FOOTER（固定在最底） -->
+      <div id="footer"></div>
+
+    </div>
+
+  </body>
+</html>
