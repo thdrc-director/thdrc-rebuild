@@ -1,39 +1,88 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>THDRC</title>
 
-    <link rel="icon" href="/favicon.ico" />
+<head>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
 
-    <!-- your global styles -->
-    <script type="module" crossorigin src="/thdrc-rebuild/assets/index-tOHnH8qf.js"></script>
-    <link rel="stylesheet" crossorigin href="/thdrc-rebuild/assets/index-ChycTD3B.css">
-  </head>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-  <!-- ❗不要加 bg-white / text-black（避免破壞 dark mode） -->
-  <body class="min-h-screen">
 
-    <!-- SPA ROOT（改成 flex column layout） -->
-    <div id="app" class="min-h-screen flex flex-col">
+  <title>THDRC Research Archive</title>
 
-      <!-- NAV -->
-      <div id="navbar"></div>
 
-      <!-- HERO -->
-      <div id="hero"></div>
+  <link
+    rel="icon"
+    type="image/png"
+    href="/thdrc-rebuild/logo.png"
+  />
 
-      <!-- MAIN CONTENT（重點：吃掉剩餘空間） -->
-      <main id="papers-root" class="flex-1"></main>
 
-      <!-- FOOTER（固定在最底） -->
-      <div id="footer"></div>
+  <meta
+    property="og:title"
+    content="THDRC Research Archive"
+  />
 
-    </div>
+  <meta
+    property="og:description"
+    content="Taiwan Human Diversity Research Center Research Archive"
+  />
+
+  <meta
+    property="og:image"
+    content="https://thdrc-director.github.io/thdrc-rebuild/logo.png"
+  />
+
+  <meta
+    property="og:url"
+    content="https://thdrc-director.github.io/thdrc-rebuild/"
+  />
+
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script type="module" crossorigin src="/thdrc-rebuild/assets/index-tOHnH8qf.js"></script>
+  <link rel="stylesheet" crossorigin href="/thdrc-rebuild/assets/index-ChycTD3B.css">
+</head>
+
+
+<body class="min-h-screen">
+
+
+<div
+id="app"
+class="min-h-screen flex flex-col"
+>
+
+
+<div id="navbar"></div>
+
+<div id="hero"></div>
+
+
+<main
+id="papers-root"
+class="flex-1"
+></main>
+
+
+<div id="footer"></div>
+
+
+</div>
+
+
 
-  </body>
+
+
+</body>
+
 </html>
