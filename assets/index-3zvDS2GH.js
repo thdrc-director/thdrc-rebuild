@@ -179,31 +179,30 @@
 
       </div>
 
-      <!-- BODY -->
+      <!-- IMAGE AREA -->
       <div class="
         h-36 flex items-center justify-center
         bg-[var(--bg)]
-        text-[var(--text)]
-        font-mono text-xs
       ">
 
-        ${t.Image?`<img src="${t.Image}" class="w-full h-full object-cover" />`:`
+        ${t.Image?`
+              <img 
+                src="${t.Image}" 
+                class="w-full h-full object-cover"
+              />
+            `:`
               <div class="flex flex-col items-center justify-center gap-3 text-center">
 
-                <!-- LOGO -->
                 <img 
                   src="${e}" 
                   class="w-20 h-20 opacity-60 object-contain"
-                  alt="logo"
                 />
 
-                <!-- CODE -->
                 <div class="font-mono tracking-[0.3em] text-sm opacity-80">
                   HDS-${n}
                 </div>
 
-                <!-- LABEL -->
-                <div class="text-[10px] opacity-50 uppercase tracking-widest mt-1">
+                <div class="text-[10px] opacity-50 uppercase tracking-widest">
                   classified document
                 </div>
 
@@ -212,7 +211,7 @@
 
       </div>
 
-      <!-- FOOTER -->
+      <!-- BODY -->
       <div class="p-3 flex flex-col gap-2">
 
         <div class="font-semibold text-sm leading-snug">
