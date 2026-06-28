@@ -7,4 +7,4 @@ dist-ssr
 .DS_Store
 Thumbs.db
 logs
-*.log
+*.logdist/
