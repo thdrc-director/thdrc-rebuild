@@ -2,6 +2,7 @@ import "./style.css"
 
 import Navbar from "./components/Navbar.js"
 import Hero from "./components/Hero.js"
+import About from "./components/About.js"
 import Papers from "./components/Papers.js"
 import Footer from "./components/Footer.js"
 
@@ -23,12 +24,18 @@ function mount(id, html) {
 
 /* ----------------------------- */
 
-function renderApp() {
-  console.log("🚀 App rendering...")
+const pages = {
+  home: Hero,
+  research: Papers,
+  about: About
+}
+
+function navigate() {
+  const hash = location.hash.replace("#/", "") || "home"
+  const page = pages[hash] || Hero
 
   mount("#navbar", Navbar())
-  mount("#hero", Hero())
-  mount("#papers-root", Papers())
+  mount("#page-content", page())
   mount("#footer", Footer())
 }
 
@@ -40,13 +47,14 @@ async function initApp() {
   // 等 Google Sheet 載入完成
   await initPapers()
 
-  renderApp()
+  navigate()
 }
 
 /* ----------------------------- */
 
-window.addEventListener("languageChange", renderApp)
-window.addEventListener("themeChange", renderApp)
+window.addEventListener("hashchange", navigate)
+window.addEventListener("languageChange", navigate)
+window.addEventListener("themeChange", navigate)
 
 /* ----------------------------- */
 

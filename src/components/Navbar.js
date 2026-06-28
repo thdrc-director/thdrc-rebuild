@@ -29,9 +29,9 @@ export default function Navbar() {
 
       <!-- NAV -->
       <nav class="flex gap-8 text-base font-medium">
-        <a href="#home" class="hover:opacity-70">${t("home")}</a>
-        <a href="#papers" class="hover:opacity-70">${t("research")}</a>
-        <a href="#about" class="hover:opacity-70">${t("about")}</a>
+        <a href="#/home" class="hover:opacity-70">${t("home")}</a>
+        <a href="#/research" class="hover:opacity-70">${t("research")}</a>
+        <a href="#/about" class="hover:opacity-70">${t("about")}</a>
       </nav>
 
       <!-- RIGHT -->

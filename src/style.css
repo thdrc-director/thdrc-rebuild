@@ -59,3 +59,9 @@ textarea:focus {
   -webkit-tap-highlight-color: transparent;
 }
 }
+/* =====================
+   SMOOTH SCROLLING
+===================== */
+html {
+  scroll-behavior: smooth;
+}

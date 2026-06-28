@@ -25,6 +25,10 @@ export default function Papers() {
   if (!inited) {
     inited = true
     queueMicrotask(init)
+  } else {
+    // Router re-mount: reset guard so events bind to fresh DOM
+    bound = false
+    queueMicrotask(init)
   }
 
   return template()
@@ -101,12 +105,12 @@ function template() {
   `
 }
 
-/* ---------------- INIT (FIXED ORDER) ---------------- */
+/* ---------------- INIT ---------------- */
 
 async function init() {
   await initPapers()
 
-  render() // 必須先 render DOM
+  render()
 
   queueMicrotask(() => {
     bindEventsOnce()
@@ -115,7 +119,7 @@ async function init() {
   })
 }
 
-/* ---------------- BIND ONCE ---------------- */
+/* ---------------- BIND ---------------- */
 
 function bindEventsOnce() {
   if (bound) return
@@ -124,6 +128,9 @@ function bindEventsOnce() {
   bindSearch()
   bindFilters()
   bindSort()
+  bindHeroCategory()
+  bindHeroSearch()
+  bindHeroSearchBtn()
 
   window.addEventListener("themeChange", render)
   window.addEventListener("languageChange", render)
@@ -146,7 +153,7 @@ function bindSearch() {
   }
 }
 
-/* ---------------- FILTERS (FIXED + CLEAN) ---------------- */
+/* ---------------- FILTERS ---------------- */
 
 function populateFilters() {
   const data = getPapers()
@@ -159,7 +166,6 @@ function populateFilters() {
     const el = document.getElementById(id)
     if (!el) return
 
-    // 🔥 清掉舊 options（重要修復）
     el.querySelectorAll("option:not([value='ALL'])").forEach(o => o.remove())
 
     const values = [...new Set(
@@ -209,14 +215,55 @@ function bindSort() {
   }
 }
 
+/* ---------------- HERO SEARCH INTEGRATION ---------------- */
+
+function bindHeroCategory() {
+  const el = document.getElementById("hero-category")
+  if (!el) return
+
+  el.onchange = e => {
+    state.category = e.target.value
+    state.page = 1
+    render()
+  }
+}
+
+function bindHeroSearch() {
+  const el = document.getElementById("hero-search")
+  if (!el) return
+
+  el.oninput = e => {
+    clearTimeout(searchTimer)
+    searchTimer = setTimeout(() => {
+      state.search = e.target.value.toLowerCase()
+      state.page = 1
+      render()
+    }, 150)
+  }
+}
+
+function bindHeroSearchBtn() {
+  const btn = document.getElementById("hero-search-btn")
+  if (!btn) return
+
+  btn.onclick = () => {
+    const input = document.getElementById("hero-search")
+    if (input) {
+      state.search = input.value.toLowerCase()
+      state.page = 1
+      render()
+    }
+  }
+}
+
+/* 🔥 FIX: always sync UI with state */
 function updateSortUI() {
   const btn = document.getElementById("sortBtn")
   if (!btn) return
 
   btn.innerHTML = `
-    Sort:
     <span class="font-semibold">
-      ${state.sort === "newest" ? "⬇ Newest" : "⬆ Oldest"}
+      ⇅ ${state.sort === "newest" ? "Newest" : "Oldest"}
     </span>
   `
 }
@@ -270,6 +317,9 @@ function render() {
   }
 
   renderPagination(totalPages)
+
+  /* 🔥 FIX: always update button */
+  updateSortUI()
 }
 
 /* ---------------- PAGINATION ---------------- */

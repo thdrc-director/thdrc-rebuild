@@ -49,6 +49,7 @@ export default function Footer() {
             <li class="hover:opacity-100 cursor-pointer">Email Us</li>
             <li class="hover:opacity-100 cursor-pointer">Collaborate</li>
             <li class="hover:opacity-100 cursor-pointer">GitHub</li>
+            <li><a href="https://www.threads.com/@thdrc_director" target="_blank" rel="noopener noreferrer" class="hover:opacity-100 cursor-pointer">THDRC Director</a></li>
             <li class="hover:opacity-100 cursor-pointer">Support</li>
           </ul>
         </div>
