@@ -270,10 +270,17 @@ function featureCard(icon, title, desc) {
 
 function typeWriter(el, text, speed = 18) {
   if (!el) return
-  let i = 0
+
+  // Cancel any previous typeWriter on this element
+  if (el._twCancel) el._twCancel.cancelled = true
+  const token = { cancelled: false }
+  el._twCancel = token
+
   el.textContent = ""
+  let i = 0
 
   function step() {
+    if (token.cancelled) return
     if (i < text.length) {
       el.textContent += text[i]
       i++

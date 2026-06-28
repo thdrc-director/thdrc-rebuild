@@ -76,7 +76,7 @@ function bind() {
   if (langBtn) {
     langBtn.onclick = () => {
       toggleLanguage()
-      window.dispatchEvent(new Event("languageChange"))
+      // toggleLanguage() already dispatches "languageChange" internally.
     }
   }
 

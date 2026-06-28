@@ -30,7 +30,13 @@ const pages = {
   about: About
 }
 
+let _navGuard = false
+
 function navigate() {
+  if (_navGuard) return
+  _navGuard = true
+  requestAnimationFrame(() => { _navGuard = false })
+
   const hash = location.hash.replace("#/", "") || "home"
   const page = pages[hash] || Hero
 
