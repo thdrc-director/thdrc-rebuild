@@ -115,6 +115,7 @@ async function init() {
   queueMicrotask(() => {
     bindEventsOnce()
     populateFilters()
+    syncFilterUI()
     updateSortUI()
   })
 }
@@ -142,11 +143,14 @@ function bindSearch() {
   const el = document.getElementById("search")
   if (!el) return
 
+  // Restore current search value after re-mount
+  el.value = state.search
+
   el.oninput = e => {
     clearTimeout(searchTimer)
 
     searchTimer = setTimeout(() => {
-      state.search = e.target.value.toLowerCase()
+      state.search = e.target.value.toLowerCase().trim()
       state.page = 1
       render()
     }, 150)
@@ -184,6 +188,26 @@ function populateFilters() {
   }
 }
 
+/* ---------------- FILTER UI SYNC ---------------- */
+
+function syncFilterUI() {
+  const category = document.getElementById("category")
+  const status = document.getElementById("status")
+  const score = document.getElementById("score")
+
+  if (category) {
+    category.value = state.category
+  }
+
+  if (status) {
+    status.value = state.status
+  }
+
+  if (score) {
+    score.value = state.score
+  }
+}
+
 /* ---------------- FILTER EVENTS ---------------- */
 
 function bindFilters() {
@@ -191,6 +215,8 @@ function bindFilters() {
     const el = document.getElementById(id)
     if (!el) return
 
+    // Keep the original simple event binding.
+    // Assigning onchange automatically replaces the previous handler.
     el.onchange = e => {
       state[key] = e.target.value
       state.page = 1
@@ -232,10 +258,13 @@ function bindHeroSearch() {
   const el = document.getElementById("hero-search")
   if (!el) return
 
+  el.value = state.search
+
   el.oninput = e => {
     clearTimeout(searchTimer)
+
     searchTimer = setTimeout(() => {
-      state.search = e.target.value.toLowerCase()
+      state.search = e.target.value.toLowerCase().trim()
       state.page = 1
       render()
     }, 150)
@@ -248,15 +277,17 @@ function bindHeroSearchBtn() {
 
   btn.onclick = () => {
     const input = document.getElementById("hero-search")
+
     if (input) {
-      state.search = input.value.toLowerCase()
+      state.search = input.value.toLowerCase().trim()
       state.page = 1
       render()
     }
   }
 }
 
-/* 🔥 FIX: always sync UI with state */
+/* ---------------- SORT UI ---------------- */
+
 function updateSortUI() {
   const btn = document.getElementById("sortBtn")
   if (!btn) return
@@ -273,24 +304,65 @@ function updateSortUI() {
 function getFiltered() {
   let data = getPapers()
 
-  if (state.category !== "ALL")
-    data = data.filter(p => p.Category === state.category)
+  /* ---------- CATEGORY ---------- */
 
-  if (state.status !== "ALL")
-    data = data.filter(p => p.Status === state.status)
-
-  if (state.score !== "ALL")
-    data = data.filter(p => (p.Score || "").startsWith(state.score))
-
-  if (state.search)
-    data = data.filter(p =>
-      (p.Title || "").toLowerCase().includes(state.search)
+  if (state.category !== "ALL") {
+    data = data.filter(
+      p => String(p.Category || "").trim() === state.category
     )
+  }
+
+  /* ---------- STATUS ---------- */
+
+  if (state.status !== "ALL") {
+    data = data.filter(
+      p => String(p.Status || "").trim() === state.status
+    )
+  }
+
+  /* ---------- SCORE ---------- */
+
+  if (state.score !== "ALL") {
+    data = data.filter(
+      p => String(p.Score || "").startsWith(state.score)
+    )
+  }
+
+  /* ---------- SEARCH ---------- */
+
+  if (state.search) {
+    // Normalize spaces and hyphens so all of these work:
+    // 299
+    // HDS-299
+    // HDS 299
+    // hds299
+    const normalize = value =>
+      String(value || "")
+        .toLowerCase()
+        .replace(/[\s-]/g, "")
+
+    const keyword = normalize(state.search)
+
+    data = data.filter(p => {
+      const title = normalize(p.Title)
+      const hdsCode = normalize(p.HDS_Code)
+
+      return (
+        title.includes(keyword) ||
+        hdsCode.includes(keyword)
+      )
+    })
+  }
+
+  /* ---------- SORT ---------- */
 
   return data.sort((a, b) => {
     const A = Number(a.HDS_Code)
     const B = Number(b.HDS_Code)
-    return state.sort === "newest" ? B - A : A - B
+
+    return state.sort === "newest"
+      ? B - A
+      : A - B
   })
 }
 
@@ -304,22 +376,35 @@ function render() {
 
   const data = getFiltered()
 
-  const totalPages = Math.max(1, Math.ceil(data.length / state.pageSize))
-  if (state.page > totalPages) state.page = 1
+  const totalPages = Math.max(
+    1,
+    Math.ceil(data.length / state.pageSize)
+  )
+
+  if (state.page > totalPages) {
+    state.page = 1
+  }
 
   const start = (state.page - 1) * state.pageSize
-  const pageData = data.slice(start, start + state.pageSize)
+  const pageData = data.slice(
+    start,
+    start + state.pageSize
+  )
 
-  list.innerHTML = pageData.map(PaperCard).join("")
+  list.innerHTML = pageData
+    .map(PaperCard)
+    .join("")
 
   if (status) {
-    status.textContent = `Loaded ${data.length} papers | Page ${state.page}/${totalPages}`
+    status.textContent =
+      `Loaded ${data.length} papers | Page ${state.page}/${totalPages}`
   }
 
   renderPagination(totalPages)
 
-  /* 🔥 FIX: always update button */
+  // Always keep controls synced with state
   updateSortUI()
+  syncFilterUI()
 }
 
 /* ---------------- PAGINATION ---------------- */
@@ -328,10 +413,15 @@ function renderPagination(totalPages) {
   const el = document.getElementById("pagination")
   if (!el) return
 
-  const pages = getPageNumbers(state.page, totalPages)
+  const pages = getPageNumbers(
+    state.page,
+    totalPages
+  )
 
   el.innerHTML = pages.map(p => {
-    if (p === "...") return `<span class="px-2 opacity-50">...</span>`
+    if (p === "...") {
+      return `<span class="px-2 opacity-50">...</span>`
+    }
 
     return `
       <button class="
@@ -359,18 +449,33 @@ function getPageNumbers(current, total) {
   const range = []
   const delta = 3
 
-  const left = Math.max(1, current - delta)
-  const right = Math.min(total, current + delta)
+  const left = Math.max(
+    1,
+    current - delta
+  )
+
+  const right = Math.min(
+    total,
+    current + delta
+  )
 
   if (left > 1) {
     range.push(1)
-    if (left > 2) range.push("...")
+
+    if (left > 2) {
+      range.push("...")
+    }
   }
 
-  for (let i = left; i <= right; i++) range.push(i)
+  for (let i = left; i <= right; i++) {
+    range.push(i)
+  }
 
   if (right < total) {
-    if (right < total - 1) range.push("...")
+    if (right < total - 1) {
+      range.push("...")
+    }
+
     range.push(total)
   }
 
