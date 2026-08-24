@@ -9,22 +9,12 @@ import { getPapers, getLoadState } from "./papersLogic.js"
 
 export default function Hero() {
 
-  const papers = getPapers() || []
-  const count = papers.length
   const isZh = getLang() === "zh"
 
   setTimeout(() => animateHero(), 100)
 
-  // 資料還沒載入完成時，等 papersLoaded 再啟動數字動畫
-  if (getLoadState() === "ready") {
-    setTimeout(() => animateCount(count), 900)
-  } else {
-    window.addEventListener(
-      "papersLoaded",
-      () => animateCount((getPapers() || []).length),
-      { once: true }
-    )
-  }
+  // 數字動畫：輪詢等資料就緒再起跑（避免事件漏接／時序問題）
+  startCounterWhenReady()
 
   return `
 <section
@@ -174,6 +164,35 @@ class="
 `
 }
 
+/* ---------------- COUNTER ---------------- */
+
+// 每 400ms 檢查一次資料是否就緒，就緒後起跑數字動畫
+// （最多嘗試 40 次 ≈ 16 秒；離開首頁時元素不存在即自動停止）
+function startCounterWhenReady() {
+  let tries = 0
+
+  const attempt = () => {
+    tries++
+
+    const el = document.getElementById("hero-count")
+    if (!el) return // 已切換頁面
+
+    const papers = getPapers() || []
+    const n = papers.length
+
+    if (n > 0 || getLoadState() === "error") {
+      animateCount(n)
+      return
+    }
+
+    if (tries < 40) {
+      setTimeout(attempt, 400)
+    }
+  }
+
+  setTimeout(attempt, 700)
+}
+
 /* ---------------- ANIMATIONS ---------------- */
 
 function animateHero() {
@@ -194,16 +213,17 @@ function animateCount(target) {
   const el = document.getElementById("hero-count")
   if (!el) return
 
-  // 使用者偏好減少動畫、或沒有資料時，直接顯示數字
-  if (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    target === 0
-  ) {
-    el.textContent = target.toLocaleString()
+  // 沒有資料時直接顯示 0
+  if (target === 0) {
+    el.textContent = "0"
     return
   }
 
-  const duration = 1800
+  // 系統開啟「減少動態效果」時縮短動畫（仍保留跳數字效果）
+  const duration =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 600
+      : 1800
   const start = performance.now()
 
   function update(now) {
