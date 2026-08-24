@@ -8,12 +8,12 @@ export default function Footer() {
     ">
 
       <div class="
-        max-w-6xl mx-auto px-6 py-14
-        grid grid-cols-1 md:grid-cols-4 gap-12
+        max-w-6xl mx-auto px-5 sm:px-6 py-10 md:py-14
+        grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-12
       ">
 
         <!-- BRAND -->
-        <div>
+        <div class="col-span-2 md:col-span-1">
           <h3 class="text-lg font-bold">THDRC</h3>
           <p class="text-sm opacity-70 mt-3 leading-relaxed">
             Research samples and analysis for understanding human diversity in Taiwan.
@@ -24,10 +24,10 @@ export default function Footer() {
         <div>
           <h4 class="font-semibold mb-3">Research</h4>
           <ul class="space-y-2 text-sm opacity-70">
-            <li class="hover:opacity-100 cursor-pointer">Sample Catalogue</li>
-            <li class="hover:opacity-100 cursor-pointer">Categories</li>
-            <li class="hover:opacity-100 cursor-pointer">Latest Papers</li>
-            <li class="hover:opacity-100 cursor-pointer">Data Insights</li>
+            <li><a href="#/research" class="hover:opacity-100">Sample Catalogue</a></li>
+            <li><a href="#/research" class="hover:opacity-100">Categories</a></li>
+            <li><a href="#/research" class="hover:opacity-100">Latest Papers</a></li>
+            <li><a href="#/about" class="hover:opacity-100">Data Insights</a></li>
           </ul>
         </div>
 
@@ -35,10 +35,9 @@ export default function Footer() {
         <div>
           <h4 class="font-semibold mb-3">About</h4>
           <ul class="space-y-2 text-sm opacity-70">
-            <li class="hover:opacity-100 cursor-pointer">Our Mission</li>
-            <li class="hover:opacity-100 cursor-pointer">Research Team</li>
-            <li class="hover:opacity-100 cursor-pointer">Publications</li>
-            <li class="hover:opacity-100 cursor-pointer">Careers</li>
+            <li><a href="#/about" class="hover:opacity-100">Our Mission</a></li>
+            <li><a href="#/about" class="hover:opacity-100">Research Team</a></li>
+            <li><a href="#/research" class="hover:opacity-100">Publications</a></li>
           </ul>
         </div>
 
@@ -46,11 +45,9 @@ export default function Footer() {
         <div>
           <h4 class="font-semibold mb-3">Contact</h4>
           <ul class="space-y-2 text-sm opacity-70">
-            <li class="hover:opacity-100 cursor-pointer">Email Us</li>
-            <li class="hover:opacity-100 cursor-pointer">Collaborate</li>
-            <li class="hover:opacity-100 cursor-pointer">GitHub</li>
-            <li><a href="https://www.threads.com/@thdrc_director" target="_blank" rel="noopener noreferrer" class="hover:opacity-100 cursor-pointer">THDRC Director</a></li>
-            <li class="hover:opacity-100 cursor-pointer">Support</li>
+            <li><a href="https://github.com/thdrc-director/thdrc-rebuild" target="_blank" rel="noopener noreferrer" class="hover:opacity-100">GitHub</a></li>
+            <li><a href="https://www.threads.com/@thdrc_director" target="_blank" rel="noopener noreferrer" class="hover:opacity-100">THDRC Director</a></li>
+            <li><a href="https://discord.gg/heMFtgA69y" target="_blank" rel="noopener noreferrer" class="hover:opacity-100">Discord</a></li>
           </ul>
         </div>
 

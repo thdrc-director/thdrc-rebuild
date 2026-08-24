@@ -5,57 +5,66 @@
 ## 1. Project Overview
 
 **What it does:**  
-A bilingual (English/Chinese) research paper archive for the Taiwan Human Diversity Research Center (THDRC). It displays a browsable, filterable, and searchable collection of research papers sourced from a Google Sheet. Users can browse papers by category, status, score, search keywords, pagination, and sorting.
+A bilingual (English/Chinese) research paper archive for the Taiwan Human Diversity Research Center (THDRC).
+
+The site displays a browsable, filterable, searchable collection of research papers sourced from a Google Sheet.
+
+Users can browse papers by:
+
+- Category
+- Status
+- Score
+- Search keywords
+- Sorting
+- Pagination
 
 **Current stage:**  
-Early development (v0.0.0). Core features are working: data loading, filtering, pagination, bilingual UI, theme switching, and UI animations.
-
-**User flow:**
-
-Home
-→ Hero section with animated count
-→ Navigate to Research page
-
-Research
-→ Browse paper cards
-→ Filter / search / sort
-→ Paginate results
-
-About
-→ Mission, features, methodology
+Early development (v0.0.0). Core features are working, including data loading, filtering, pagination, bilingual UI, theme switching, responsive layout, and UI animations.
 
 ---
 
 ## 2. Tech Stack
 
 | Category | Tech |
-|----------|-----|
+|----------|------|
 | Build tool | Vite |
-| CSS | Tailwind CSS |
-| Language | Vanilla JS (ES Modules) |
+| CSS | Tailwind CSS + PostCSS |
+| Language | Vanilla JavaScript (ES Modules) |
 | Data | Google Sheets API |
 | Hosting | GitHub Pages |
+| CI/CD | GitHub Actions |
+| Package manager | npm |
 
-Notes:
-- Hybrid Tailwind setup (CDN + PostCSS)
+### Notes
+
+- No frontend framework
 - No backend
 - Fully static SPA
+- Tailwind CSS currently uses a hybrid setup:
+  - Tailwind CDN
+  - PostCSS integration
+- Google Sheets acts as the primary data source
+- GitHub Actions handles production builds and deployment
 
----
+### Important dependency
 
-## 3. Architecture
+The project requires:
 
-### Entry
+```text
+@tailwindcss/postcss
 
+This package is listed in devDependencies because postcss.config.js loads it during production builds.
+
+Without it, a clean CI environment (npm ci) will fail during vite build.
+
+3. Architecture
+Entry
 index.html
-- #navbar
-- #page-content
-- #footer
+├── #navbar
+├── #page-content
+└── #footer
 
----
-
-### Components
-
+Components
 main.js
 ├── Navbar.js
 ├── Hero.js
@@ -64,25 +73,20 @@ main.js
 ├── About.js
 └── Footer.js
 
----
-
-### Routing
-
-#/home
-#/research
-#/about
-
-Handled by hashchange in main.js
-
----
-
-## 4. Structure
-
+4. Project Structure
 src/
 ├── main.js
 ├── i18n.js
 ├── theme.js
 ├── style.css
+│
+├── assets/
+│   ├── director.png
+│   ├── discord.png
+│   ├── hero.jpg
+│   ├── logo.png
+│   ├── thdrc_administration-building.png
+│   └── threads.png
 │
 ├── components/
 │   ├── Navbar.js
@@ -90,133 +94,384 @@ src/
 │   ├── Papers.js
 │   ├── PaperCard.js
 │   ├── About.js
-│   └── Footer.js
+│   ├── Footer.js
+│   ├── Filter.js
+│   └── Research.js
 │
-└── components/papersLogic.js
+├── data/
+│   └── papers.js
+│
+└── scripts/
+    └── papers.js
 
----
+.github/
+└── workflows/
+    └── deploy.yml
 
-## 5. State
+There are also several legacy / unused files documented under Technical Debt.
 
-Language → i18n.js  
-Theme → theme.js  
-Data → papersLogic.js  
-Filters → Papers.js  
-Route → URL hash  
+5. Routing
+Hash-based routing is used for GitHub Pages compatibility.
 
-All state is module-based (no global store).
+Routes:
 
----
+#/home
+#/research
+#/about
 
-## 6. Data Flow
+Routing is handled by hashchange in main.js.
 
+No server-side routing is required.
+
+6. State
+Language → i18n.js
+Theme    → theme.js
+Data     → papersLogic.js
+Filters  → Papers.js
+Route    → URL hash
+
+All application state is module-based.
+
+There is no global state manager.
+
+7. Data Flow
 Google Sheets
-→ papersLogic.js
-→ Papers.js (filter/sort/search)
-→ PaperCard.js (render)
+      ↓
+papersLogic.js
+      ↓
+Papers.js
+      ↓
+Filter / Search / Sort / Pagination
+      ↓
+PaperCard.js
+      ↓
+Rendered paper cards
 
----
+Google Sheets is currently treated as the single source of truth for paper data.
 
-## 7. Features
+8. Features
+Google Sheets data fetch
+Paper grid display
+Category filtering
+Status filtering
+Score filtering
+Search
+Sorting
+Pagination
+Bilingual UI (English / Chinese)
+Dark / light mode
+Animated hero count
+Responsive design
+About page animations
+Hash-based routing
+Static GitHub Pages deployment
+Automatic deployment through GitHub Actions
+9. Design Decisions
+No framework
+Vanilla JavaScript is intentionally used instead of React/Vue/etc.
 
-- Google Sheets data fetch
-- Paper grid display
-- Category / status / score filters
-- Search
-- Sorting
-- Pagination
-- Bilingual UI
-- Dark / light mode
-- Animated hero count
-- Responsive design
-- About page animations
+Reason:
 
----
+Small project scope
+Simple rendering model
+Minimal dependencies
+Easy static deployment
+Hash routing
+Hash routing is used because the project is hosted on GitHub Pages and does not require server-side route handling.
 
-## 8. Design Decisions
+Google Sheets as DB
+Google Sheets is used as the primary data source.
 
-No framework  
-→ Vanilla JS only
+Advantages:
 
-Hash routing  
-→ GitHub Pages compatible
+Easy content management
+No backend required
+Non-developers can update research records
+Single source of truth
+Full re-render UI
+The application uses relatively simple full re-rendering instead of a complex reactive state architecture.
 
-Google Sheets as DB  
-→ Single source of truth
+This keeps the code predictable and easy to maintain at the current project size.
 
-Full re-render UI  
-→ Simple and predictable
+10. Deployment
+Production deployment
+The project is deployed automatically to GitHub Pages using GitHub Actions.
 
----
+Workflow:
 
-## 9. Technical Debt
-
-Unused files:
-- counter.js
-- Filter.js
-- Research.js
-- vite.svg
-- javascript.svg
-- data/papers.js
-- scripts/papers.js
-
----
-
-Duplicate theme logic:
-- theme.js (primary)
-- Navbar.js (duplicate)
-
----
-
-Deprecated:
-- Hero search UI removed from actual flow
-
----
-
-Hardcoded:
-- Google Sheets URL
-- pagination size
-- base path for GitHub Pages
-
----
-
-## 10. Future Improvements
-
-- Loading state
-- Empty state UI
-- Better accessibility
-- Remove Tailwind CDN (optional)
-- Mobile UX polish
-- SEO meta tags
-
----
-
-## 11. Dev
-
-npm install
-npm run dev
+git push origin main
+        ↓
+GitHub Actions
+        ↓
+npm ci
+        ↓
 npm run build
-npm run preview
+        ↓
+dist/
+        ↓
+upload-pages-artifact
+        ↓
+deploy-pages
+        ↓
+GitHub Pages
 
----
+Workflow file:
 
-## 12. Deploy
+.github/workflows/deploy.yml
+
+Important
+dist/ is NOT manually committed to main.
+
+The production build is generated by GitHub Actions.
+
+Do NOT use the old deployment procedure:
 
 npm run build
 git add dist/ -f
 git commit -m "deploy"
 git push origin main
 
----
+That was the previous deployment approach and is no longer used.
 
-## 13. Live
+11. GitHub Pages Configuration
+GitHub repository:
 
-https://thdrc-director.github.io/thdrc-rebuild/
 https://github.com/thdrc-director/thdrc-rebuild
 
----
+GitHub Pages source:
 
-## 14. Notes
+GitHub Actions
 
-Static SPA for research browsing.  
-No backend. No auth. No server logic.
+The project uses the official GitHub Pages artifact deployment flow.
+
+The deployment workflow uses:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+and:
+
+uses: actions/upload-pages-artifact@v4
+
+followed by:
+
+uses: actions/deploy-pages@v4
+
+gh-pages branch
+The project does not rely on manually maintained gh-pages deployment anymore.
+
+Do not manually edit or push a gh-pages branch for normal deployments.
+
+12. Development
+Install dependencies:
+
+npm install
+
+Run development server:
+
+npm run dev
+
+Production build:
+
+npm run build
+
+Preview production build:
+
+npm run preview
+
+Windows PowerShell note
+If PowerShell blocks npm.ps1 because of Execution Policy, use:
+
+npm.cmd install
+npm.cmd run build
+npm.cmd run dev
+
+This bypasses the PowerShell npm.ps1 wrapper without changing the system execution policy.
+
+13. Deployment Procedure
+Normal deployment requires only:
+
+git add .
+git commit -m "describe your change"
+git push origin main
+
+Then GitHub Actions automatically:
+
+Checks out the repository
+Installs dependencies
+Builds the Vite project
+Uploads dist/ as a Pages artifact
+Deploys the artifact to GitHub Pages
+Check deployment status in GitHub Actions.
+
+14. Important CI/CD Note
+A local build can succeed even when GitHub Actions fails if the local node_modules contains packages that are not declared in package.json.
+
+Therefore, when debugging CI build failures, prefer testing with:
+
+npm ci
+npm run build
+
+rather than relying only on:
+
+npm run build
+
+The project previously encountered this exact issue with:
+
+@tailwindcss/postcss
+
+It has now been added to devDependencies.
+
+Current clean-install build status:
+
+npm ci
+✓ successful
+
+npm run build
+✓ successful
+
+15. Technical Debt
+Unused / legacy files
+The following files appear to be unused or legacy:
+
+counter.js
+Filter.js
+Research.js
+vite.svg
+javascript.svg
+data/papers.js
+scripts/papers.js
+
+They should be removed only after confirming there are no hidden imports or future plans for them.
+
+Duplicate theme logic
+Theme-related logic currently exists in:
+
+theme.js
+Navbar.js
+
+theme.js should remain the primary theme implementation.
+
+The duplicate logic in Navbar.js should eventually be removed.
+
+Deprecated UI
+The Hero search UI has been removed from the actual application flow but related legacy code may still exist.
+
+Hardcoded configuration
+Currently hardcoded:
+
+Google Sheets URL
+Pagination size
+GitHub Pages base path
+Some UI configuration values
+These can eventually be moved into configuration constants or environment variables where appropriate.
+
+Tailwind setup
+The project currently has a hybrid Tailwind setup involving:
+
+Tailwind CDN
+PostCSS
+@tailwindcss/postcss
+This works, but the CSS setup should eventually be simplified into a single consistent build strategy.
+
+16. Future Improvements
+Priority
+Loading state
+Empty state UI
+Better accessibility
+Mobile UX polish
+Error handling for Google Sheets fetch failures
+SEO meta tags
+Optional
+Remove Tailwind CDN
+Consolidate Tailwind/PostCSS configuration
+Remove unused legacy files
+Consolidate duplicate theme logic
+Move hardcoded configuration into a central config module
+Improve code splitting if the application grows
+17. Live
+Production:
+
+https://thdrc-director.github.io/thdrc-rebuild/
+
+Repository:
+
+https://github.com/thdrc-director/thdrc-rebuild
+
+18. Repository Status
+Current deployment architecture:
+
+Vite
+  ↓
+GitHub Actions
+  ↓
+GitHub Pages Artifact
+  ↓
+GitHub Pages
+
+Current application architecture:
+
+Vanilla JS
+  ↓
+Hash Router
+  ↓
+Components
+  ↓
+Google Sheets
+  ↓
+Filtering / Search / Sort / Pagination
+
+Current project characteristics:
+
+Static SPA
+No backend
+No authentication
+No server-side logic
+Google Sheets as data source
+GitHub Pages as hosting
+GitHub Actions as CI/CD
+
+19. Operational Rule
+For normal development:
+
+Edit code
+   ↓
+npm run dev
+   ↓
+Test locally
+   ↓
+npm run build
+   ↓
+git add .
+   ↓
+git commit
+   ↓
+git push
+   ↓
+GitHub Actions
+   ↓
+GitHub Pages
+
+Do not manually upload dist/.
+
+Do not manually maintain gh-pages.
+
+Do not manually deploy through GitHub Pages branch publishing.
+
+The repository's GitHub Actions workflow is now the single deployment mechanism.
+
+20. Notes
+This is a static research archive for THDRC.
+
+There is currently:
+
+No backend
+No authentication
+No server-side rendering
+No database server
+No API server
+Google Sheets provides the research data, while GitHub Pages provides static hosting.
+
+The current architecture is intentionally simple and suitable for the project's early development stage.

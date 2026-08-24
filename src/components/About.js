@@ -1,8 +1,8 @@
 import { t, getLang } from "../i18n.js"
-import directorImg from "../assets/director.png"
-import buildingImg from "../assets/thdrc_administration-building.png"
-import threadsIcon from "../assets/threads.png"
-import discordIcon from "../assets/discord.png"
+import directorImg from "../assets/opt/director-800.webp"
+import buildingImg from "../assets/opt/building-800.webp"
+import threadsIcon from "../assets/opt/threads-96.webp"
+import discordIcon from "../assets/opt/discord-96.webp"
 
 export default function About() {
   const isZh = getLang() === "zh"
@@ -64,15 +64,17 @@ bg-[var(--bg)] text-[var(--text)]
     <h3 class="text-lg font-semibold mb-3 tracking-wide">
       ${isZh ? "中心主任" : "Director"}
     </h3>
-    <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-      <img src="${directorImg}" alt="Director" class="w-full md:w-48 h-auto object-cover rounded-lg" />
+    <div class="flex flex-col md:flex-row gap-5 md:gap-6 items-center md:items-start text-center md:text-left">
+      <img src="${directorImg}" alt="${isZh ? "中心主任" : "Director"}"
+        width="800" height="800" loading="lazy" decoding="async"
+        class="w-36 sm:w-44 md:w-48 aspect-square object-cover rounded-lg shrink-0" />
       <p
         id="director-text"
         data-text="${isZh
           ? '本中心由一位具備深厚人類學研究背景的學者領導，長期投入於田野調查與族群研究工作，致力於推動台灣人群多樣性的學術研究與資料整合。其研究關注文化差異、族群互動與社會結構之間的關聯，並同時將研究成果延伸至公共議題與社會實踐，促進更全面的理解與對話。'
           : 'The center is led by a scholar with extensive anthropological research experience, dedicated to advancing academic inquiry and social practice regarding Taiwan\'s ethnic diversity.'
         }"
-        class="leading-relaxed opacity-80 text-base md:text-lg"
+        class="leading-relaxed opacity-80 text-base md:text-lg flex-1 min-w-0"
       ></p>
     </div>
   </div>
@@ -88,15 +90,17 @@ bg-[var(--bg)] text-[var(--text)]
     <h3 class="text-lg font-semibold mb-3 tracking-wide">
       ${isZh ? "建築沿革" : "History"}
     </h3>
-    <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
-      <img src="${buildingImg}" alt="THDRC Building" class="w-full md:w-48 h-auto object-cover rounded-lg" />
+    <div class="flex flex-col md:flex-row gap-5 md:gap-6 items-center md:items-start text-center md:text-left">
+      <img src="${buildingImg}" alt="${isZh ? "中心行政大樓" : "THDRC administration building"}"
+        width="800" height="534" loading="lazy" decoding="async"
+        class="w-full max-w-sm md:max-w-none md:w-72 xl:w-80 h-auto object-cover rounded-lg shrink-0" />
       <p
         id="history-text"
         data-text="${isZh
           ? '本中心的行政大樓歷經多年規劃與設計，最終於 2025 年正式落成啟用。其建置過程凝聚了長期的研究發展需求與制度性規劃，象徵中心在研究能量與組織規模上的穩定成長。隨著大樓啟用，本中心也進一步強化資料整合與跨領域研究的基礎，持續推動台灣人類多樣性研究的深化與延展。'
           : 'The center\'s administration building was completed after years of planning and officially inaugurated in 2025.'
         }"
-        class="leading-relaxed opacity-80 text-base md:text-lg"
+        class="leading-relaxed opacity-80 text-base md:text-lg flex-1 min-w-0"
       ></p>
     </div>
   </div>
@@ -270,6 +274,12 @@ function featureCard(icon, title, desc) {
 
 function typeWriter(el, text, speed = 18) {
   if (!el) return
+
+  // 使用者偏好減少動畫時，直接顯示完整文字
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    el.textContent = text
+    return
+  }
 
   // Cancel any previous typeWriter on this element
   if (el._twCancel) el._twCancel.cancelled = true

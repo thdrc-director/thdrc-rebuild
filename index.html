@@ -7,76 +7,64 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
-
 
   <title>THDRC Research Archive</title>
 
-
-  <link
-    rel="icon"
-    type="image/png"
-    href="/thdrc-rebuild/logo.png"
-  />
-
-
+  <!-- SEO -->
   <meta
-    property="og:title"
-    content="THDRC Research Archive"
+    name="description"
+    content="Taiwan Human Diversity Research Center (THDRC) — browsable bilingual archive of behavioral research papers on human diversity in Taiwan."
   />
 
+  <link rel="icon" type="image/svg+xml" href="/thdrc-rebuild/favicon.svg" />
+
+  <!-- Browser UI color -->
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0f0f10" media="(prefers-color-scheme: dark)" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="THDRC Research Archive" />
   <meta
     property="og:description"
     content="Taiwan Human Diversity Research Center Research Archive"
   />
-
   <meta
     property="og:image"
     content="https://thdrc-director.github.io/thdrc-rebuild/logo.png"
   />
-
   <meta
     property="og:url"
     content="https://thdrc-director.github.io/thdrc-rebuild/"
   />
+  <meta property="og:type" content="website" />
 
-  <meta
-    property="og:type"
-    content="website"
-  />
-
-
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Sheets preconnect -->
+  <link rel="preconnect" href="https://docs.google.com" crossorigin />
+  <link rel="dns-prefetch" href="https://docs.google.com" />
 
 </head>
 
+<body class="min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
 
-<body class="min-h-screen">
+  <div id="app" class="min-h-screen flex flex-col">
 
+    <div id="navbar"></div>
 
-<div
-id="app"
-class="min-h-screen flex flex-col"
->
+    <div id="page-content" class="flex-1"></div>
 
+    <div id="footer"></div>
 
-<div id="navbar"></div>
+  </div>
 
-<div id="page-content" class="flex-1"></div>
+  <noscript>
+    <p style="text-align:center; padding:2rem;">
+      This site requires JavaScript. / 本網站需要啟用 JavaScript。
+    </p>
+  </noscript>
 
-<div id="footer"></div>
-
-
-</div>
-
-
-
-<script
-type="module"
-src="/src/main.js"
-></script>
-
+  <script type="module" src="/src/main.js"></script>
 
 </body>
 

@@ -1,5 +1,8 @@
 let currentLang = localStorage.getItem("lang") || "en"
 
+// sync <html lang> for SEO / a11y
+document.documentElement.lang = currentLang === "zh" ? "zh-Hant" : "en"
+
 const translations = {
   en: {
     home: "Home",
@@ -10,7 +13,7 @@ const translations = {
     heroTitle: "Taiwan Human Diversity Research Center",
 
     heroText:
-      "Comprehensive analysis of human diversity patterns in Taiwan. Explore behavioral studies, social phenomena, and research insights.",
+      "Comprehensive analysis of human diversity patterns in Taiwan.<br/>Explore behavioral studies, social phenomena, and research insights.",
 
     aboutTitle: "About This Archive",
     aboutMission: "Our Mission",
@@ -46,7 +49,7 @@ const translations = {
     heroTitle: "台灣人類多樣性研究中心",
 
     heroText:
-      "透過行為研究與社會現象分析，探索台灣人類多樣性的研究成果。",
+      "透過行為研究與社會現象分析，<br class=\"sm:hidden\"/>探索台灣人類多樣性的研究成果。",
 
     aboutTitle: "關於本資料庫",
     aboutMission: "我們的使命",
@@ -82,6 +85,8 @@ export function toggleLanguage() {
   currentLang = currentLang === "en" ? "zh" : "en"
 
   localStorage.setItem("lang", currentLang)
+
+  document.documentElement.lang = currentLang === "zh" ? "zh-Hant" : "en"
 
   window.dispatchEvent(new Event("languageChange"))
 }

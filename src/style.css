@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+/* Tailwind v4: class-based dark mode (html.dark) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* =====================
    BASE
 ===================== */
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -10,11 +14,13 @@ body {
 /* =====================
    THEME TOKENS
 ===================== */
+
 :root {
   --bg: #ffffff;
   --text: #0f172a;
   --card: #ffffff;
   --border: #e5e7eb;
+  --hover: #f1f5f9;
 }
 
 html.dark {
@@ -22,22 +28,27 @@ html.dark {
   --card: #171717;
   --text: #e5e5e5;
   --border: #2a2a2a;
+  --hover: #262626;
 }
 
 /* =====================
    GLOBAL BODY STYLE
 ===================== */
+
 body {
   background: var(--bg);
   color: var(--text);
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* =====================
-   OPTIONAL
-===================== */
+/* dark mode browser native UI */
 .dark {
   color-scheme: dark;
+}
+
+/* =====================
+   FORM ELEMENTS
+===================== */
 
 input,
 select,
@@ -54,14 +65,30 @@ textarea:focus {
   box-shadow: none;
 }
 
-/* 移除 chrome 藍色點擊效果 */
 * {
   -webkit-tap-highlight-color: transparent;
 }
-}
+
 /* =====================
    SMOOTH SCROLLING
 ===================== */
+
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* =====================
+   REDUCED MOTION
+===================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

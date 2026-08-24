@@ -1,5 +1,7 @@
-import { initPapers, getPapers } from "./papersLogic.js"
+import { initPapers, getPapers, getLoadState } from "./papersLogic.js"
+
 import PaperCard from "./PaperCard.js"
+import { t, getLang } from "../i18n.js"
 
 /* ---------------- STATE ---------------- */
 
@@ -19,17 +21,22 @@ let inited = false
 let bound = false
 let searchTimer = null
 
+/* ---------------- DATA EVENTS（module 層級只註冊一次） ---------------- */
+
+window.addEventListener("papersLoaded", () => render())
+window.addEventListener("papersError", () => render())
+
 /* ---------------- MAIN ---------------- */
 
 export default function Papers() {
   if (!inited) {
     inited = true
-    queueMicrotask(init)
   } else {
     // Router re-mount: reset guard so events bind to fresh DOM
     bound = false
-    queueMicrotask(init)
   }
+
+  queueMicrotask(init)
 
   return template()
 }
@@ -37,55 +44,63 @@ export default function Papers() {
 /* ---------------- TEMPLATE ---------------- */
 
 function template() {
+
+  const isZh = getLang() === "zh"
+
   return `
     <section class="
-      p-6 text-[var(--text)]
+      px-4 py-6 sm:p-6 text-[var(--text)]
       bg-[var(--bg)]
       max-w-7xl mx-auto min-h-screen
     ">
 
-      <h2 class="text-3xl font-bold mb-1">Research Papers</h2>
-      <p class="text-sm opacity-60 mb-6">Browse research papers dataset</p>
+      <h2 class="text-2xl sm:text-3xl font-bold mb-1">
+        ${isZh ? "研究論文" : "Research Papers"}
+      </h2>
+      <p class="text-sm opacity-60 mb-5 sm:mb-6">
+        ${isZh ? "瀏覽研究論文資料集" : "Browse research papers dataset"}
+      </p>
 
+      <!-- FILTER PANEL -->
       <div class="
         bg-[var(--card)]
         border border-[var(--border)]
-        rounded-2xl p-5 mb-6 shadow-sm
+        rounded-2xl p-4 sm:p-5 mb-6 shadow-sm
       ">
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-
-          <button id="sortBtn"
-            class="px-3 py-2 border rounded-lg text-sm
-                   bg-[var(--card)] border-[var(--border)]
-                   hover:opacity-80 transition">
-          </button>
+        <div class="flex flex-col gap-3">
 
           <input id="search"
-            class="w-full md:max-w-md px-3 py-2 border rounded-lg text-sm
+            class="w-full px-3.5 py-2.5 border rounded-lg text-sm
                    bg-[var(--card)] border-[var(--border)]"
-            placeholder="Search papers..."
+            placeholder="${isZh ? "搜尋論文（標題 / HDS 編號）…" : "Search papers (title / HDS code)..."}"
           />
 
-          <div class="flex flex-wrap gap-2">
+          <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
 
             <select id="category"
-              class="px-3 py-2 border rounded-lg text-sm
+              class="min-w-0 px-3 py-2 border rounded-lg text-sm
                      bg-[var(--card)] border-[var(--border)]">
-              <option value="ALL">All Categories</option>
+              <option value="ALL">${isZh ? "所有領域" : "All Categories"}</option>
             </select>
 
             <select id="status"
-              class="px-3 py-2 border rounded-lg text-sm
+              class="min-w-0 px-3 py-2 border rounded-lg text-sm
                      bg-[var(--card)] border-[var(--border)]">
-              <option value="ALL">All Status</option>
+              <option value="ALL">${isZh ? "所有狀態" : "All Status"}</option>
             </select>
 
             <select id="score"
-              class="px-3 py-2 border rounded-lg text-sm
+              class="min-w-0 px-3 py-2 border rounded-lg text-sm
                      bg-[var(--card)] border-[var(--border)]">
-              <option value="ALL">All Scores</option>
+              <option value="ALL">${isZh ? "所有評分" : "All Scores"}</option>
             </select>
+
+            <button id="sortBtn"
+              class="px-3 py-2 border rounded-lg text-sm text-left sm:text-center
+                     bg-[var(--card)] border-[var(--border)]
+                     hover:bg-[var(--hover)] transition">
+            </button>
 
           </div>
 
@@ -95,11 +110,11 @@ function template() {
       </div>
 
       <div id="list" class="
-        grid gap-6
-        grid-cols-[repeat(auto-fill,minmax(260px,1fr))]
+        grid gap-4 sm:gap-6
+        grid-cols-[repeat(auto-fill,minmax(min(260px,100%),1fr))]
       "></div>
 
-      <div id="pagination" class="flex gap-2 mt-8 justify-center"></div>
+      <div id="pagination" class="flex flex-wrap gap-2 mt-8 justify-center"></div>
 
     </section>
   `
@@ -108,9 +123,6 @@ function template() {
 /* ---------------- INIT ---------------- */
 
 async function init() {
-  await initPapers()
-
-  render()
 
   queueMicrotask(() => {
     bindEventsOnce()
@@ -118,6 +130,10 @@ async function init() {
     syncFilterUI()
     updateSortUI()
   })
+
+  await initPapers()
+
+  render()
 }
 
 /* ---------------- BIND ---------------- */
@@ -129,12 +145,6 @@ function bindEventsOnce() {
   bindSearch()
   bindFilters()
   bindSort()
-  bindHeroCategory()
-  bindHeroSearch()
-  bindHeroSearchBtn()
-
-  window.addEventListener("themeChange", render)
-  window.addEventListener("languageChange", render)
 }
 
 /* ---------------- SEARCH ---------------- */
@@ -161,6 +171,7 @@ function bindSearch() {
 
 function populateFilters() {
   const data = getPapers()
+  if (!data.length) return
 
   fill("category", "Category")
   fill("status", "Status")
@@ -195,17 +206,9 @@ function syncFilterUI() {
   const status = document.getElementById("status")
   const score = document.getElementById("score")
 
-  if (category) {
-    category.value = state.category
-  }
-
-  if (status) {
-    status.value = state.status
-  }
-
-  if (score) {
-    score.value = state.score
-  }
+  if (category) category.value = state.category
+  if (status) status.value = state.status
+  if (score) score.value = state.score
 }
 
 /* ---------------- FILTER EVENTS ---------------- */
@@ -215,8 +218,6 @@ function bindFilters() {
     const el = document.getElementById(id)
     if (!el) return
 
-    // Keep the original simple event binding.
-    // Assigning onchange automatically replaces the previous handler.
     el.onchange = e => {
       state[key] = e.target.value
       state.page = 1
@@ -241,60 +242,17 @@ function bindSort() {
   }
 }
 
-/* ---------------- HERO SEARCH INTEGRATION ---------------- */
-
-function bindHeroCategory() {
-  const el = document.getElementById("hero-category")
-  if (!el) return
-
-  el.onchange = e => {
-    state.category = e.target.value
-    state.page = 1
-    render()
-  }
-}
-
-function bindHeroSearch() {
-  const el = document.getElementById("hero-search")
-  if (!el) return
-
-  el.value = state.search
-
-  el.oninput = e => {
-    clearTimeout(searchTimer)
-
-    searchTimer = setTimeout(() => {
-      state.search = e.target.value.toLowerCase().trim()
-      state.page = 1
-      render()
-    }, 150)
-  }
-}
-
-function bindHeroSearchBtn() {
-  const btn = document.getElementById("hero-search-btn")
-  if (!btn) return
-
-  btn.onclick = () => {
-    const input = document.getElementById("hero-search")
-
-    if (input) {
-      state.search = input.value.toLowerCase().trim()
-      state.page = 1
-      render()
-    }
-  }
-}
-
 /* ---------------- SORT UI ---------------- */
 
 function updateSortUI() {
   const btn = document.getElementById("sortBtn")
   if (!btn) return
 
+  const isZh = getLang() === "zh"
+
   btn.innerHTML = `
-    <span class="font-semibold">
-      ⇅ ${state.sort === "newest" ? "Newest" : "Oldest"}
+    <span class="font-semibold whitespace-nowrap">
+      ⇅ ${state.sort === "newest" ? (isZh ? "最新" : "Newest") : (isZh ? "最舊" : "Oldest")}
     </span>
   `
 }
@@ -302,7 +260,7 @@ function updateSortUI() {
 /* ---------------- DATA ---------------- */
 
 function getFiltered() {
-  let data = getPapers()
+  let data = [...getPapers()]
 
   /* ---------- CATEGORY ---------- */
 
@@ -332,10 +290,7 @@ function getFiltered() {
 
   if (state.search) {
     // Normalize spaces and hyphens so all of these work:
-    // 299
-    // HDS-299
-    // HDS 299
-    // hds299
+    // 299 / HDS-299 / HDS 299 / hds299
     const normalize = value =>
       String(value || "")
         .toLowerCase()
@@ -346,10 +301,14 @@ function getFiltered() {
     data = data.filter(p => {
       const title = normalize(p.Title)
       const hdsCode = normalize(p.HDS_Code)
+      const category = normalize(p.Category)
+      const categoryEN = normalize(p.CategoryEN)
 
       return (
         title.includes(keyword) ||
-        hdsCode.includes(keyword)
+        hdsCode.includes(keyword) ||
+        category.includes(keyword) ||
+        categoryEN.includes(keyword)
       )
     })
   }
@@ -370,34 +329,63 @@ function getFiltered() {
 
 function render() {
   const list = document.getElementById("list")
-  const status = document.getElementById("papers-status")
+  const statusEl = document.getElementById("papers-status")
 
   if (!list) return
 
+  const loadState = getLoadState()
+
+  /* ---------- LOADING ---------- */
+  if (loadState === "loading" || loadState === "idle") {
+    list.innerHTML = skeletonCards()
+    if (statusEl) statusEl.textContent = getLang() === "zh" ? "資料載入中…" : "Loading papers…"
+    updateSortUI()
+    syncFilterUI()
+    return
+  }
+
+  /* ---------- ERROR ---------- */
+  if (loadState === "error") {
+    list.innerHTML = errorState()
+    if (statusEl) statusEl.textContent = ""
+
+    const retry = document.getElementById("retry-btn")
+    if (retry) {
+      retry.onclick = async () => {
+        list.innerHTML = skeletonCards()
+        await initPapers()
+        render()
+      }
+    }
+    return
+  }
+
+  /* ---------- READY ---------- */
+  // 資料可能在首次掛載後才抵達，篩選器選項需在此（重新）填充
+  populateFilters()
+
   const data = getFiltered()
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(data.length / state.pageSize)
-  )
+  const totalPages = Math.max(1, Math.ceil(data.length / state.pageSize))
 
   if (state.page > totalPages) {
     state.page = 1
   }
 
   const start = (state.page - 1) * state.pageSize
-  const pageData = data.slice(
-    start,
-    start + state.pageSize
-  )
+  const pageData = data.slice(start, start + state.pageSize)
 
-  list.innerHTML = pageData
-    .map(PaperCard)
-    .join("")
+  /* ---------- EMPTY ---------- */
+  if (data.length === 0) {
+    list.innerHTML = emptyState()
+  } else {
+    list.innerHTML = pageData.map(PaperCard).join("")
+  }
 
-  if (status) {
-    status.textContent =
-      `Loaded ${data.length} papers | Page ${state.page}/${totalPages}`
+  if (statusEl) {
+    statusEl.textContent = getLang() === "zh"
+      ? `共 ${data.length} 筆論文｜第 ${state.page} / ${totalPages} 頁`
+      : `Loaded ${data.length} papers | Page ${state.page}/${totalPages}`
   }
 
   renderPagination(totalPages)
@@ -405,6 +393,103 @@ function render() {
   // Always keep controls synced with state
   updateSortUI()
   syncFilterUI()
+
+  // 清除篩選按鈕
+  const clearBtn = document.getElementById("clear-filters")
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      state.search = ""
+      state.category = "ALL"
+      state.status = "ALL"
+      state.score = "ALL"
+      state.page = 1
+      const search = document.getElementById("search")
+      if (search) search.value = ""
+      render()
+    }
+  }
+}
+
+/* ---------------- STATES ---------------- */
+
+function skeletonCards() {
+  const card = `
+    <div class="
+      rounded-xl border overflow-hidden animate-pulse
+      bg-[var(--card)] border-[var(--border)]
+    ">
+      <div class="h-14 border-b border-[var(--border)]"></div>
+      <div class="h-36 bg-[var(--hover)]"></div>
+      <div class="p-3 flex flex-col gap-2">
+        <div class="h-4 rounded bg-[var(--hover)] w-11/12"></div>
+        <div class="h-4 rounded bg-[var(--hover)] w-2/3"></div>
+        <div class="h-6 rounded-full bg-[var(--hover)] w-20 mt-1"></div>
+      </div>
+    </div>
+  `
+  return card.repeat(Math.min(state.pageSize, 8))
+}
+
+function emptyState() {
+  const isZh = getLang() === "zh"
+
+  return `
+    <div class="
+      col-span-full flex flex-col items-center justify-center
+      text-center py-16 px-4
+    ">
+      <div class="text-5xl mb-4">🔍</div>
+
+      <p class="text-lg font-semibold mb-2">
+        ${isZh ? "找不到符合條件的論文" : "No papers match your filters"}
+      </p>
+
+      <p class="text-sm opacity-60 mb-6">
+        ${isZh ? "試試調整關鍵字或清除篩選條件。" : "Try different keywords or clear the filters."}
+      </p>
+
+      <button id="clear-filters"
+        class="
+          px-5 py-2.5 rounded-xl text-sm font-medium
+          border border-[var(--border)] bg-[var(--card)]
+          hover:bg-[var(--hover)] transition
+        ">
+        ${isZh ? "清除所有篩選" : "Clear all filters"}
+      </button>
+    </div>
+  `
+}
+
+function errorState() {
+  const isZh = getLang() === "zh"
+
+  return `
+    <div class="
+      col-span-full flex flex-col items-center justify-center
+      text-center py-16 px-4
+    ">
+      <div class="text-5xl mb-4">⚠️</div>
+
+      <p class="text-lg font-semibold mb-2">
+        ${isZh ? "資料載入失敗" : "Failed to load papers"}
+      </p>
+
+      <p class="text-sm opacity-60 mb-6 max-w-sm">
+        ${isZh
+          ? "無法連線到 Google Sheets 資料來源，請檢查網路後再試一次。"
+          : "Could not reach the Google Sheets data source. Check your connection and try again."}
+      </p>
+
+      <button id="retry-btn"
+        class="
+          px-5 py-2.5 rounded-xl text-sm font-medium
+          bg-[var(--text)] text-[var(--bg)]
+          hover:opacity-85 transition
+        ">
+        ${isZh ? "重新載入" : "Retry"}
+      </button>
+    </div>
+  `
 }
 
 /* ---------------- PAGINATION ---------------- */
@@ -413,23 +498,23 @@ function renderPagination(totalPages) {
   const el = document.getElementById("pagination")
   if (!el) return
 
-  const pages = getPageNumbers(
-    state.page,
-    totalPages
-  )
+  const pages = getPageNumbers(state.page, totalPages)
 
   el.innerHTML = pages.map(p => {
     if (p === "...") {
-      return `<span class="px-2 opacity-50">...</span>`
+      return `<span class="px-2 py-1.5 opacity-50 select-none">...</span>`
     }
 
     return `
-      <button class="
-        px-3 py-1 border rounded-lg
-        bg-[var(--card)]
-        border-[var(--border)]
-        ${p === state.page ? "font-bold" : "opacity-70"}
-      ">
+      <button aria-label="Page ${p}"
+        aria-current="${p === state.page ? "page" : "false"}"
+        class="
+          min-w-[2.5rem] py-1.5 px-2 border rounded-lg text-sm
+          bg-[var(--card)]
+          border-[var(--border)]
+          hover:bg-[var(--hover)] transition
+          ${p === state.page ? "font-bold bg-[var(--text)] text-[var(--bg)] border-[var(--text)]" : "opacity-75"}
+        ">
         ${p}
       </button>
     `
@@ -439,6 +524,7 @@ function renderPagination(totalPages) {
     btn.onclick = () => {
       state.page = Number(btn.textContent)
       render()
+      document.querySelector("h2")?.scrollIntoView({ behavior: "smooth", block: "start" })
     }
   })
 }
@@ -449,15 +535,8 @@ function getPageNumbers(current, total) {
   const range = []
   const delta = 3
 
-  const left = Math.max(
-    1,
-    current - delta
-  )
-
-  const right = Math.min(
-    total,
-    current + delta
-  )
+  const left = Math.max(1, current - delta)
+  const right = Math.min(total, current + delta)
 
   if (left > 1) {
     range.push(1)

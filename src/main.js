@@ -31,6 +31,7 @@ const pages = {
 }
 
 let _navGuard = false
+let _lastHash = null
 
 function navigate() {
   if (_navGuard) return
@@ -40,9 +41,27 @@ function navigate() {
   const hash = location.hash.replace("#/", "") || "home"
   const page = pages[hash] || Hero
 
+  // 只有換頁才回到頂部；切主題/語言保留捲動位置
+  if (hash !== _lastHash) {
+    window.scrollTo(0, 0)
+    _lastHash = hash
+  }
+
   mount("#navbar", Navbar())
   mount("#page-content", page())
   mount("#footer", Footer())
+
+  updateDocumentMeta(hash)
+}
+
+function updateDocumentMeta(hash) {
+  const titles = {
+    home: "THDRC Research Archive",
+    research: "Research Papers | THDRC",
+    about: "About Us | THDRC"
+  }
+
+  document.title = titles[hash] || titles.home
 }
 
 /* ----------------------------- */
@@ -50,8 +69,9 @@ function navigate() {
 async function initApp() {
   initTheme()
 
-  // 等 Google Sheet 載入完成
-  await initPapers()
+  // 不等 Google Sheets —— 先渲染 UI，
+  // 資料完成後由 papersLoaded 事件觸發更新（見 papersLogic.js）
+  initPapers()
 
   navigate()
 }
@@ -61,7 +81,5 @@ async function initApp() {
 window.addEventListener("hashchange", navigate)
 window.addEventListener("languageChange", navigate)
 window.addEventListener("themeChange", navigate)
-
-/* ----------------------------- */
 
 initApp()
